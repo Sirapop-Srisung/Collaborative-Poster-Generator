@@ -14,23 +14,8 @@ const PAGE_SIZES = {
 };
 
 const TEMPLATE_CONFIG = {
-  brightLearn: {
-    name: 'Bright Learn',
-    glueText: 'Apply Glue Here',
-    instructionTitle: 'BRIGHT LEARN',
-    tileStyle: 'topHeader',
-    includeColoredPreviewByDefault: false,
-  },
-  brainyBloom: {
-    name: 'Brainy Bloom Studio',
-    glueText: 'Apply Adhesive Here',
-    instructionTitle: 'Collaborative Poster Instructions',
-    tileStyle: 'footerGuide',
-    footerSubtitle: 'COLLABORATIVE POSTER',
-    includeColoredPreviewByDefault: true,
-  },
-  sheetHub: {
-    name: 'SheetHub',
+  default: {
+    name: 'Default',
     glueText: 'Apply Glue Here',
     instructionTitle: 'Instructions',
     tileStyle: 'cleanFooter',
@@ -41,7 +26,7 @@ const TEMPLATE_CONFIG = {
 
 const state = {
   title: 'My Poster',
-  template: 'brightLearn',
+  template: 'default',
   paperSize: 'letter',
   exportScale: 3,
   rows: 3,
@@ -507,14 +492,7 @@ function renderTilePageToCanvas(targetCanvas, options) {
   const ctx = page.ctx;
   drawPageBackground(ctx, page);
 
-  const template = TEMPLATE_CONFIG[state.template];
-  if (template.tileStyle === 'topHeader') {
-    drawBrightLearnTile(ctx, page, options.row, options.col);
-  } else if (template.tileStyle === 'footerGuide') {
-    drawBrainyBloomTile(ctx, page, options.row, options.col);
-  } else {
-    drawSheetHubTile(ctx, page, options.row, options.col);
-  }
+  drawDefaultTile(ctx, page, options.row, options.col);
 }
 
 function createPageCanvas(scale, targetCanvas) {
@@ -584,23 +562,13 @@ function getLetterSafePosterTop(page) {
 }
 
 function drawInstructionsPage(ctx, page) {
-  const template = TEMPLATE_CONFIG[state.template];
   const title = state.title.toUpperCase();
 
-  if (state.template === 'brightLearn') {
-    drawCenteredText(ctx, template.instructionTitle, page.width / 2, 68, 28, 'Arial', 'bold');
-    drawCenteredText(ctx, `Instructions for ${title}`, page.width / 2, 115, 20, 'Arial', 'bold');
-    drawCenteredText(ctx, 'Collaborative Poster', page.width / 2, 144, 18, 'Arial', 'normal');
-  } else if (state.template === 'brainyBloom') {
-    drawCenteredText(ctx, template.instructionTitle, page.width / 2, 64, 26, 'Arial', 'bold');
-    drawCenteredText(ctx, title, page.width / 2, 102, 22, 'Arial', 'bold');
-  } else {
-    drawCenteredText(ctx, `Instructions for`, page.width / 2, 64, 23, 'Arial', 'bold');
-    drawCenteredText(ctx, `${title} Poster`, page.width / 2, 98, 24, 'Arial', 'bold');
-    drawCenteredText(ctx, 'Collaborative Poster', page.width / 2, 130, 18, 'Arial', 'normal');
-  }
+  drawCenteredText(ctx, `Instructions for`, page.width / 2, 64, 23, 'Arial', 'bold');
+  drawCenteredText(ctx, `${title} Poster`, page.width / 2, 98, 24, 'Arial', 'bold');
+  drawCenteredText(ctx, 'Collaborative Poster', page.width / 2, 130, 18, 'Arial', 'normal');
 
-  const startY = state.template === 'sheetHub' ? 178 : 190;
+  const startY = 178;
   const x = 72;
   const maxW = page.width - 144;
   let y = startY;
@@ -633,105 +601,14 @@ function drawInstructionsPage(ctx, page) {
   });
 }
 
-function drawBrightLearnTile(ctx, page, row, col) {
-  const label = getTileLabel(row, col);
-  const template = TEMPLATE_CONFIG[state.template];
-
-  drawFittedText(ctx, state.title.toUpperCase(), page.width - 250, 34, 220, 17, 'Arial', 'bold', 'right');
-
-  ctx.fillStyle = '#000';
-  ctx.font = 'bold 32pt Arial';
-  ctx.fillText('Instructions', 25, 86);
-  const bulletBottom = drawBulletList(ctx, getStudentInstructionBullets('brightLearn'), 32, 126, page.width * 0.56, 17, '12.5pt Arial');
-
-  drawFittedText(ctx, label, page.width - 185, 162, 160, 76, 'Arial', 'bold', 'right');
-
-  const rightGlue = state.showGlueMargin && col < state.cols - 1;
-  const bottomGlue = state.showGlueMargin && row < state.rows - 1;
-  const glueRightW = 42;
-  const glueBottomH = 42;
-  const safeTop = page.paperSize === 'letter'
-    ? Math.max(258, bulletBottom + 22)
-    : Math.max(286, bulletBottom + 26);
-  const imageBox = makeSquareTileArtworkBox(page, {
-    top: safeTop,
-    bottom: 20,
-    side: 34,
-    maxArtSize: page.paperSize === 'letter' ? 430 : 452,
-    rightGlue,
-    bottomGlue,
-    glueRightW,
-    glueBottomH,
-  });
-
-  drawTileArtworkBox(ctx, imageBox, row, col, template.glueText, {
-    rightGlue,
-    bottomGlue,
-    glueRightW,
-    glueBottomH,
-    lineWidth: 1.8,
-    labelSize: 14,
-  });
-}
-
-function drawBrainyBloomTile(ctx, page, row, col) {
+function drawDefaultTile(ctx, page, row, col) {
   const label = getTileLabel(row, col);
   const template = TEMPLATE_CONFIG[state.template];
 
   ctx.fillStyle = '#000';
   ctx.font = 'bold 34pt Arial';
   ctx.fillText('Instructions', 32, 55);
-  const bulletBottom = drawBulletList(ctx, getStudentInstructionBullets('brainyBloom'), 35, 100, page.width - 70, 17, '12.5pt Arial');
-
-  const footerH = 112;
-  const rightGlue = state.showGlueMargin && col < state.cols - 1;
-  const bottomGlue = state.showGlueMargin && row < state.rows - 1;
-  const glueRightW = 36;
-  const glueBottomH = 36;
-  const safeTop = page.paperSize === 'letter'
-    ? Math.max(202, bulletBottom + 20)
-    : Math.max(214, bulletBottom + 22);
-  const imageBox = makeSquareTileArtworkBox(page, {
-    top: safeTop,
-    bottom: footerH + 10,
-    side: 42,
-    maxArtSize: page.paperSize === 'letter' ? 428 : 456,
-    rightGlue,
-    bottomGlue,
-    glueRightW,
-    glueBottomH,
-  });
-
-  drawTileArtworkBox(ctx, imageBox, row, col, template.glueText, {
-    rightGlue,
-    bottomGlue,
-    glueRightW,
-    glueBottomH,
-    lineWidth: 1.8,
-    labelSize: 12,
-  });
-
-  drawFooterGuide(ctx, page, row, col, {
-    label,
-    title: state.title.toUpperCase(),
-    subtitle: template.footerSubtitle,
-    labelFontSize: 64,
-    titleFontSize: 27,
-    subtitleFontSize: 20,
-    miniX: 28,
-    miniY: page.height - 108,
-    miniSize: 82,
-  });
-}
-
-function drawSheetHubTile(ctx, page, row, col) {
-  const label = getTileLabel(row, col);
-  const template = TEMPLATE_CONFIG[state.template];
-
-  ctx.fillStyle = '#000';
-  ctx.font = 'bold 34pt Arial';
-  ctx.fillText('Instructions', 32, 55);
-  const bulletBottom = drawBulletList(ctx, getStudentInstructionBullets('sheetHub'), 35, 100, page.width - 70, 17, '12.5pt Arial');
+  const bulletBottom = drawBulletList(ctx, getStudentInstructionBullets(), 35, 100, page.width - 70, 17, '12.5pt Arial');
 
   const footerH = 108;
   const rightGlue = state.showGlueMargin && col < state.cols - 1;
@@ -1103,16 +980,7 @@ function drawFittedText(ctx, text, x, y, maxWidth, size, family, weight, align) 
   ctx.restore();
 }
 
-function getStudentInstructionBullets(templateId) {
-  if (templateId === 'brightLearn') {
-    return [
-      'Neatly color your section using bright, bold colors.',
-      'Work with your classmates to make sure the colors match across all pieces.',
-      'When finished, carefully cut along the border.',
-      'Give your completed piece to your teacher—it will be combined with everyone else’s work!',
-    ];
-  }
-
+function getStudentInstructionBullets() {
   return [
     'Color your section neatly using bright, bold colors.',
     'Work with classmates so colors match across sections.',
@@ -1362,7 +1230,7 @@ function revokeActivePdfUrl() {
 
 function resetProject() {
   state.title = 'My Poster';
-  state.template = 'brightLearn';
+  state.template = 'default';
   state.paperSize = 'letter';
   state.exportScale = 3;
   state.rows = 3;
