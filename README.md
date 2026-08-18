@@ -17,11 +17,9 @@ A browser-based Collaborative Poster Builder. This project is a static website, 
   - 5 × 5
   - 6 × 6
   - Custom rows and columns
-- Worksheet templates:
-  - Bright Learn
-  - Brainy Bloom Studio
-  - SheetHub
-- Live Template Preview: switching templates updates the preview instantly.
+- Worksheet template:
+  - Default
+- Live Template Preview: Default updates instantly as poster settings change.
 - US Letter-safe image placement: preview and tile artwork frames are calculated to fit Letter pages cleanly by default.
 - Balanced larger tile artwork frames: tile images are enlarged while staying safely below the instruction text; the artwork area remains 1:1.
 - PDF Preview modal now generates a 3-page preview only: Main Poster Preview, Guide Preview, and Template Tile A1.
@@ -65,7 +63,7 @@ If you want the app to work fully offline, download those library files and upda
 4. Upload the main poster image.
 5. Optional: upload a second guide / colored preview image.
 6. Optional: upload your shop logo, adjust the watermark opacity, and adjust the logo size. The watermark is used only for Generate PDF Preview.
-7. Click a template. The preview updates instantly.
+7. Review the Default template preview.
 8. Generate PDF Preview for the 3-page preview PDF, or download the full PDF / ZIP.
 
 ## Notes for production
@@ -97,4 +95,4 @@ The workspace now includes a **Generate PDF Preview Live Preview** section with 
 2. Guide Preview
 3. A1 Tile Preview
 
-These three canvases update instantly when you change the title, paper size, grid, template, uploaded images, logo watermark, watermark opacity, or logo size. They match the pages produced by the Generate PDF Preview button.
+These three canvases update instantly when you change the title, paper size, grid, uploaded images, logo watermark, watermark opacity, or logo size. They match the pages produced by the Generate PDF Preview button.
